@@ -24,7 +24,7 @@ contract Lottery {
     }
 
     function buy(uint16 number) public payable {
-        require(participants_number_list[msg.sender] == 0, "Already participated"); // 이미 참여한 번호가 있으면 예외 발생
+        require(participants_number_list[msg.sender] == 0, "Already participated"); 
         require(msg.value == ticket_price);
         require(block.timestamp < end_time, "Sell phase ended"); // 판매 기간이 끝나면 구매할 수 없음
 
@@ -44,8 +44,8 @@ contract Lottery {
 
         uint16 current_num = participants_number_list[msg.sender];
         for(uint i=0; i<participants[current_num].length;i++){
-            if(participants_number_list[participants[current_num][i]] == winningNumber){ // 참여한 사람들 중에서 당첨 번호와 일치하는 번호를 가진 사람을 구함
-                winner_list[participants[current_num][i]] = winner_amount; // 당첨자 리스트에 추가
+            if(participants_number_list[participants[current_num][i]] == winningNumber){ 
+                winner_list[participants[current_num][i]] = winner_amount; 
                 winner_count++;
             }
         }
@@ -55,8 +55,8 @@ contract Lottery {
     }
 
     function claim() public {
-        require(!state_flag, "Draw not finished"); // 추첨이 끝나지 않았으면 수령할 수 없음
-        require(block.timestamp < claimPhaseEndTime, "Claim phase ended"); // 마감 시간 이후에는 수령할 수 없음
+        require(!state_flag, "Draw not finished"); 
+        require(block.timestamp < claimPhaseEndTime, "Claim phase ended"); 
         require(winner_count > 0, "No winners");
 
         uint amount = (winner_list[msg.sender] / winner_count);
