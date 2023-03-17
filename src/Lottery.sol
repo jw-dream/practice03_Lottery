@@ -13,7 +13,6 @@ contract Lottery {
     bool state_flag;
     uint winner_amount;
 
-    uint256 private sellPhaseEndTime;
     uint256 private claimPhaseEndTime;
     uint256 public end_time;
 
@@ -24,9 +23,9 @@ contract Lottery {
     }
 
     function buy(uint16 number) public payable {
-        require(participants_number_list[msg.sender] == 0, "Already participated"); 
+        require(participants_number_list[msg.sender] == 0);
         require(msg.value == ticket_price);
-        require(block.timestamp < end_time, "Sell phase ended"); // 판매 기간이 끝나면 구매할 수 없음
+        require(block.timestamp < end_time);
 
         state_flag = true;
 
@@ -36,8 +35,8 @@ contract Lottery {
     }
 
     function draw() public {
-        require(block.timestamp >= end_time, "Cannot draw before end time");
-        require(state_flag, "No participants");
+        require(block.timestamp >= end_time);
+        require(state_flag);
 
         uint256 seed = uint256(blockhash(block.number - 1));
         winningNumber = uint16(uint256(keccak256(abi.encodePacked(seed, block.timestamp))) % (2**10));
@@ -55,13 +54,13 @@ contract Lottery {
     }
 
     function claim() public {
-        require(!state_flag, "Draw not finished"); 
-        require(block.timestamp < claimPhaseEndTime, "Claim phase ended"); 
-        require(winner_count > 0, "No winners");
+        require(!state_flag); 
+        require(block.timestamp < claimPhaseEndTime); 
+        require(winner_count > 0);
 
         uint amount = (winner_list[msg.sender] / winner_count);
         (bool _success, ) = payable(msg.sender).call{value: amount}("");
-        require(_success, "Transfer failed");
+        require(_success);
         delete winner_list[msg.sender];
     }
 
@@ -69,4 +68,3 @@ contract Lottery {
 
 
 }
-
